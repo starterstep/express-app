@@ -1,1 +1,1 @@
-module.exports = require('../').services;
+module.exports = require('express-app').services;

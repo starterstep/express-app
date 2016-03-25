@@ -21,38 +21,12 @@ exports.init = function(logger, config, cli, appc) {
             fs.writeFileSync(appDir + '/lib/express-app.js', 'var load = module.exports = ');
             fs.appendFileSync(appDir + '/lib/express-app.js', oldFile);
 
-            var sourceMap = require(appDir + '/lib/express-app.json');
+            var sources = require(appDir + '/lib/express-app.json').sources;
+            var index = sources.indexOf("node_modules/express-app/index.js");
 
-            var map = _.reduce(sourceMap.sources, function(result, source, index) {
-                if (index >= 2) {
-                    var splits = source.split('/');
-                    if (splits.length > 1) {
-                        if (splits[0] != 'node_modules') {
-                            var withoutExt = source.split('.js')[0];
-                            var withoutIndex = /^(.*)\/index$/g.exec(withoutExt);
-                            var key = withoutIndex ? withoutIndex[1] : withoutExt;
-                            result += '"'+key+'":load('+index+'),';
-                        } else {
-                            var name = splits[1];
-                            if (!result[name]) {
-                                var pkg = require(appDir + '/node_modules/'+name+'/package.json');
-                                var main = pkg.main || './index.js';
-                                if (pkg.browser) {
-                                    main = pkg.browser[main];
-                                }
-                                main = main.substring(1);
-                                if (source === 'node_modules/'+name+main) {
-                                    result += '"'+name+'":load('+index+'),';
-                                }
-                            }
-                        }
-                    }
-                }
-                return result;
-            }, '');
-            logger.info(JSON.stringify(map));
+            logger.info('express-app found at index = ' + index);
 
-            fs.appendFileSync(appDir + '/lib/express-app.js', '\n\nmodule.exports = {' + map + '};');
+            fs.appendFileSync(appDir + '/lib/express-app.js', '\n\nmodule.exports = load('+index+');');
 
             finished();
         });
