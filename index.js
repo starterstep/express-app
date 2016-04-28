@@ -6,13 +6,13 @@ var $ = module.exports = {
     plugins: {},
     services: {},
     managers: {}
-}
+};
 
 $.load = function(_$) {
     if (_$) {
         _.extend($, _$);
     }
-    console.log('')
+    console.log('');
     console.log('LOADING');
 
     var process = function(moduleName, list) {
@@ -43,10 +43,17 @@ $.load = function(_$) {
         console.log('loaded', moduleName, module);
     };
 
-    process('lib', require('../../lib/**/*.js', {mode: 'list'}));
-    process('plugins', require('../../plugins/**/*.js', {mode: 'list'}));
-    process('services', require('../../services/**/*.js', {mode: 'list'}));
-    process('managers', require('../../managers/**/*.js', {mode: 'list'}));
+    process('lib', require('../../lib/**/*.js', {mode: 'list', options: {ignore:'../../lib/**/index.js'} }));
+    require('../../lib/**/index.js', {mode: 'list'});
+    
+    process('plugins', require('../../plugins/**/*.js', {mode: 'list', options: {ignore:'../../plugins/**/index.js'} }));
+    require('../../plugins/**/index.js', {mode: 'list'});
+    
+    process('services', require('../../services/**/*.js', {mode: 'list', options: {ignore:'../../services/**/index.js'} }));
+    require('../../services/**/index.js', {mode: 'list'});
+    
+    process('managers', require('../../managers/**/*.js', {mode: 'list', options: {ignore:'../../managers/**/index.js'} }));
+    require('../../managers/**/index.js', {mode: 'list'});
 
     return $;
 };
