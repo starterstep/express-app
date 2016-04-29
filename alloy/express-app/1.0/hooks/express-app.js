@@ -21,8 +21,11 @@ exports.init = function(logger, config, cli, appc) {
             fs.writeFileSync(appDir + '/lib/express-app.js', 'var load = module.exports = ');
             fs.appendFileSync(appDir + '/lib/express-app.js', oldFile);
 
-            var sources = require(appDir + '/lib/express-app.json').sources;
-            var index = sources.indexOf("node_modules/express-app/index.js");
+            // var sources = require(appDir + '/lib/express-app.json').sources;
+            // var index = sources.indexOf("node_modules/express-app/index.js");
+
+            var splits = oldFile.toString().split('"express-app":');
+            var index = splits[1].split(',')[0];
 
             logger.info('express-app found at index = ' + index);
 
