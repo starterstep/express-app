@@ -17,6 +17,7 @@ $.load = function(_$) {
     console.log('LOADING');
 
     var process = function(moduleName, list) {
+        console.log('loading', moduleName);
         var module = $[moduleName];
 
         _.each(list, function(item) {
@@ -41,7 +42,7 @@ $.load = function(_$) {
                 module[s.camelize(item.name)] = item.module;
             }
         });
-        console.log('loaded', moduleName, module);
+        console.log('loaded', moduleName);
     };
 
     process('lib', require('../../lib/**/*.js', {mode: 'list', options: {ignore:'../../lib/**/index.js'} }));
