@@ -6,7 +6,8 @@ var $ = module.exports = {
     plugins: {},
     controllers: {},
     services: {},
-    managers: {}
+    managers: {},
+    orchestrators: {}
 };
 
 $.load = function(_$) {
@@ -59,6 +60,9 @@ $.load = function(_$) {
 
     process('managers', require('../../managers/**/*.js', {mode: 'list', options: {ignore:'../../managers/**/index.js'} }));
     require('../../managers/**/index.js', {mode: 'list'});
+
+    process('orchestrators', require('../../orchestrators/**/*.js', {mode: 'list', options: {ignore:'../../orchestrators/**/index.js'} }));
+    require('../../orchestrators/**/index.js', {mode: 'list'});
 
     return $;
 };
