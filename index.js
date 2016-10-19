@@ -5,7 +5,7 @@ var $ = module.exports = {};
 
 var dirs = ['lib', 'plugins', 'controllers', 'services', 'managers', 'orchestrators'];
 _.each(dirs, function(dir) {
-    $[dir] = function(){return _.isFunction($[dir].index) && $[dir].index.apply(this,arguments)};
+    $[dir] = {};
 });
 
 $.load = function(_$) {
@@ -34,10 +34,7 @@ $.load = function(_$) {
                     if (index === splits.length - 1) {
                         ref[split] = item.module;
                     } else {
-                        var localRef = ref;
-                        ref = ref[split] || (ref[split] = function() {
-                                return _.isFunction(localRef[split].index) && localRef[split].index.apply(this,arguments)
-                            });
+                        ref = ref[split] || (ref[split] = {});
                     }
                 });
             } else {
