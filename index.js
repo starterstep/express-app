@@ -19,7 +19,8 @@ $.load = function(_$) {
         console.log('loading', moduleName);
         var module = $[moduleName];
 
-        var indexItems = [];
+        var moduleItems = [];
+        var loadItems = [];
 
         var doItem = function(item) {
             if (item.name.indexOf('express') !== -1) {
@@ -43,14 +44,21 @@ $.load = function(_$) {
         };
 
         _.each(list, function(item) {
-            //console.log('item.name=', item.name);
+            console.log('!!!!!item.name=', item.name);
             if (item.name.indexOf('index') !== -1) {
-                return indexItems.push(item);
+                return doItem(item);
             }
+            if (item.name.indexOf('load') !== -1) {
+                return loadItems.push(item);
+            }
+            moduleItems.push(item);
+        });
+
+        _.each(moduleItems, function(item) {
             doItem(item);
         });
 
-        _.each(indexItems, function(item) {
+        _.each(loadItems, function(item) {
             doItem(item);
         });
         console.log('loaded', moduleName);
