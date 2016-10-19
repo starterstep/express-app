@@ -15,21 +15,17 @@ $.load = function(_$) {
     console.log('');
     console.log('LOADING');
 
-    var process = function(moduleName, list, onlyIndex) {
-        console.log('loading', moduleName, onlyIndex);
+    var process = function(moduleName, list) {
+        console.log('loading', moduleName);
         var module = $[moduleName];
 
-        _.each(list, function(item) {
-            //console.log('item.name=', item.name);
-            if (onlyIndex && item.name.indexOf('index') === -1) {
-                return;
-            }
-            if (!onlyIndex && item.name.indexOf('index') !== -1) {
-                return;
-            }
+        var indexItems = [];
+
+        var doItem = function(item) {
             if (item.name.indexOf('express') !== -1) {
                 return;
             }
+
             var splits = item.name.split('/');
             if (splits.length > 1) {
                 var ref = module;
@@ -47,27 +43,33 @@ $.load = function(_$) {
             } else {
                 module[s.camelize(item.name)] = item.module;
             }
+        };
+
+        _.each(list, function(item) {
+            //console.log('item.name=', item.name);
+            if (item.name.indexOf('index') !== -1) {
+                return indexItems.push(item);
+            }
+            doItem(item);
+        });
+
+        _.each(indexItems, function(item) {
+            doItem(item);
         });
         console.log('loaded', moduleName);
     };
 
-    process('lib', require('../../lib/**/*.js', {mode: 'list', options: {ignore:'../../lib/**/index.js'} }));
-    process('lib', require('../../lib/**/*.js', {mode: 'list'}), true);
+    process('lib', require('../../lib/**/*.js', {mode: 'list'}));
 
-    process('plugins', require('../../plugins/**/*.js', {mode: 'list', options: {ignore:'../../plugins/**/index.js'} }));
-    process('plugins', require('../../plugins/**/*.js', {mode: 'list'}), true);
+    process('plugins', require('../../plugins/**/*.js', {mode: 'list'}));
 
-    process('controllers', require('../../controllers/**/*.js', {mode: 'list', options: {ignore:'../../controllers/**/index.js'} }));
-    process('controllers', require('../../controllers/**/*.js', {mode: 'list'}), true);
+    process('controllers', require('../../controllers/**/*.js', {mode: 'list'}));
 
-    process('services', require('../../services/**/*.js', {mode: 'list', options: {ignore:'../../services/**/index.js'} }));
-    process('services', require('../../services/**/*.js', {mode: 'list'}), true);
+    process('services', require('../../services/**/*.js', {mode: 'list'}));
 
-    process('managers', require('../../managers/**/*.js', {mode: 'list', options: {ignore:'../../managers/**/index.js'} }));
-    process('managers', require('../../managers/**/*.js', {mode: 'list'}), true);
+    process('managers', require('../../managers/**/*.js', {mode: 'list'}));
 
-    process('orchestrators', require('../../orchestrators/**/*.js', {mode: 'list', options: {ignore:'../../orchestrators/**/index.js'} }));
-    process('orchestrators', require('../../orchestrators/**/*.js', {mode: 'list'}), true);
+    process('orchestrators', require('../../orchestrators/**/*.js', {mode: 'list'}));
 
     return $;
 };
