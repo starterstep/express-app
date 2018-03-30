@@ -3,7 +3,7 @@ var s = require('underscore.string');
 
 var $ = module.exports = {};
 
-var dirs = ['lib', 'plugins', 'controllers', 'services', 'managers', 'orchestrators'];
+var dirs = ['lib', 'helpers', 'plugins', 'controllers', 'services', 'managers', 'orchestrators'];
 
 var process = function(moduleName, list) {
     var module = $[moduleName];
