@@ -71,6 +71,10 @@ $.load = function(_$) {
     process('lib', require('../../lib/**/*.js', {mode: 'list', resolve:['path'], options: {ignore:'../../lib/**/index.js'} }));
     process('lib', require('../../lib/**/index.js', {mode: 'list', resolve:['path']}));
 
+    console.log('loading helpers');
+    process('helpers', require('../../helpers/**/*.js', {mode: 'list', resolve:['path'], options: {ignore:'../../helpers/**/index.js'} }));
+    process('helpers', require('../../helpers/**/index.js', {mode: 'list', resolve:['path']}));
+
     console.log('loading plugins');
     process('plugins', require('../../plugins/**/*.js', {mode: 'list', resolve:['path'], options: {ignore:'../../plugins/**/index.js'} }));
     process('plugins', require('../../plugins/**/index.js', {mode: 'list', resolve:['path']}));
