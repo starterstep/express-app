@@ -3,7 +3,7 @@ var s = require('underscore.string');
 
 var $ = module.exports = {};
 
-var dirs = ['lib', 'helpers', 'plugins', 'controllers', 'services', 'managers', 'orchestrators'];
+var dirs = ['lib', 'helpers', 'plugins', 'controllers', 'services', 'managers', 'orchestrators', 'components'];
 
 var process = function(moduleName, list) {
     var module = $[moduleName];
@@ -94,6 +94,10 @@ $.load = function(_$) {
     console.log('loading orchestrators');
     process('orchestrators', require('../../orchestrators/**/*.js', {mode: 'list', resolve:['path'], options: {ignore:'../../orchestrators/**/index.js'} }));
     process('orchestrators', require('../../orchestrators/**/index.js', {mode: 'list', resolve:['path']}));
+
+    console.log('loading components');
+    process('components', require('../../components/**/*.js', {mode: 'list', resolve:['path'], options: {ignore:'../../components/**/index.js'} }));
+    process('components', require('../../components/**/index.js', {mode: 'list', resolve:['path']}));
 
     console.log('LOADED');
 
