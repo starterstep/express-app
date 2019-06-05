@@ -5,11 +5,35 @@ var $ = module.exports = {};
 
 var dirs = ['lib', 'helpers', 'plugins', 'controllers', 'services', 'managers', 'orchestrators', 'components'];
 
-var process = function(moduleName, list) {
+var lazy = function(func) {
+    func.lazy = function() {
+        var topArgs = arguments;
+
+        var iam = function() {
+            if (iam.lazy) {
+                return;
+            }
+            _.extend(iam, func.apply(null, topArgs));
+            iam.lazy = true;
+            var callback = topArgs[topArgs.length-1];
+            if (_.isFunction(callback)) {
+                callback();
+            }
+        };
+        return iam;
+    };
+    return func;
+};
+
+var process = function(moduleName, list, lazyFunctions) {
     var module = $[moduleName];
 
     _.each(list, function(item) {
         //console.log('module item.name=', item.name);
+
+        if (lazyFunctions && _.isFunction(item.module)) {
+            lazy(item.module);
+        }
 
         item.name = item.name.split('../../'+moduleName+'/')[1];
 
@@ -96,8 +120,8 @@ $.load = function(_$) {
     process('orchestrators', require('../../orchestrators/**/index.js', {mode: 'list', resolve:['path']}));
 
     console.log('loading components');
-    process('components', require('../../components/**/*.js', {mode: 'list', resolve:['path'], options: {ignore:'../../components/**/index.js'} }));
-    process('components', require('../../components/**/index.js', {mode: 'list', resolve:['path']}));
+    process('components', require('../../components/**/*.js', {mode: 'list', resolve:['path'], options: {ignore:'../../components/**/index.js'} }), true);
+    process('components', require('../../components/**/index.js', {mode: 'list', resolve:['path']}), true);
 
     console.log('LOADED');
 
