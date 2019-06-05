@@ -11,7 +11,7 @@ var lazy = function(func) {
 
         var iam = function() {
             if (iam.lazy) {
-                return;
+                return iam;
             }
             _.extend(iam, func.apply(null, topArgs));
             iam.lazy = true;
@@ -19,6 +19,7 @@ var lazy = function(func) {
             if (_.isFunction(callback)) {
                 callback();
             }
+            return iam;
         };
         return iam;
     };
