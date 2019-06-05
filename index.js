@@ -61,7 +61,12 @@ var process = function(moduleName, list, lazyFunctions) {
                 } else {
                     var localRef = ref;
                     ref = ref[split] || (ref[split] = function() {
-                            return _.isFunction(localRef[split].index) && localRef[split].index.apply(this,arguments);
+                            if (_.isFunction(localRef[split].index)) {
+                                if (lazyFunctions) {
+                                    lazy(localRef[split].index);
+                                }
+                                return localRef[split].index.apply(this,arguments);
+                            }
                         });
                 }
                 prevSplit = split;
