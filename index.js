@@ -25,13 +25,13 @@ var lazy = function(func) {
     return func;
 };
 
-var process = function(moduleName, list, lazyFunctions) {
+var process = function(moduleName, list) {
     var module = $[moduleName];
 
     _.each(list, function(item) {
         //console.log('module item.name=', item.name);
 
-        if (lazyFunctions && _.isFunction(item.module)) {
+        if (_.isFunction(item.module)) {
             lazy(item.module);
         }
 
@@ -60,14 +60,11 @@ var process = function(moduleName, list, lazyFunctions) {
                     }
                 } else {
                     var localRef = ref;
-                    ref = ref[split] || (ref[split] = function() {
-                            if (_.isFunction(localRef[split].index)) {
-                                if (lazyFunctions) {
-                                    lazy(localRef[split].index);
-                                }
-                                return localRef[split].index.apply(this,arguments);
-                            }
-                        });
+                    ref = ref[split] || (ref[split] = lazy(function() {
+                        if (_.isFunction(localRef[split].index)) {
+                            return localRef[split].index.apply(this,arguments);
+                        }
+                    }));
                 }
                 prevSplit = split;
                 prevRef = ref;
@@ -125,8 +122,8 @@ $.load = function(_$) {
     process('orchestrators', require('../../orchestrators/**/index.js', {mode: 'list', resolve:['path']}));
 
     console.log('loading components');
-    process('components', require('../../components/**/*.js', {mode: 'list', resolve:['path'], options: {ignore:'../../components/**/index.js'} }), true);
-    process('components', require('../../components/**/index.js', {mode: 'list', resolve:['path']}), true);
+    process('components', require('../../components/**/*.js', {mode: 'list', resolve:['path'], options: {ignore:'../../components/**/index.js'} }));
+    process('components', require('../../components/**/index.js', {mode: 'list', resolve:['path']}));
 
     console.log('LOADED');
 
