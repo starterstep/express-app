@@ -13,11 +13,12 @@ var lazy = function(func) {
             if (iam.lazy) {
                 return iam;
             }
-            _.extend(iam, func.apply(null, topArgs));
+            var me = func.apply(null, topArgs);
+            _.extend(iam, me);
             iam.lazy = true;
             var callback = topArgs[topArgs.length-1];
             if (_.isFunction(callback)) {
-                callback();
+                callback(me);
             }
             return iam;
         };
