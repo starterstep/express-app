@@ -16,6 +16,7 @@ var lazy = function(func) {
             var me = func.apply(null, topArgs);
             _.extend(iam, me);
             iam.lazy = true;
+            iam.created = true;
             var callback = topArgs[topArgs.length-1];
             if (_.isFunction(callback)) {
                 callback(me);
